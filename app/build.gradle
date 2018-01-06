@@ -38,5 +38,22 @@ dependencies {
     implementation 'io.reactivex:rxandroid:1.2.1'
     implementation 'io.reactivex:rxjava-async-util:0.21.0'
     implementation 'com.jakewharton.rxbinding:rxbinding:1.0.1'
-    implementation 'com.cantrowitz:rxbroadcast:1.1.2'
+
+    //ButterKnife View infection
+    implementation "com.jakewharton:butterknife:8.8.1"
+    annotationProcessor "com.jakewharton:butterknife-compiler:8.8.1"
+
+    //Timber logs
+    implementation 'com.jakewharton.timber:timber:4.5.1'
+
+    //Dagger
+    implementation "com.google.dagger:dagger-android:2.11"
+    implementation "com.google.dagger:dagger-android-support:2.11"
+    annotationProcessor "com.google.dagger:dagger-android-processor:2.11"
+
+    //NetWorking & RestClient
+    implementation 'com.squareup.retrofit2:retrofit:2.2.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava:2.2.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.6.0'
 }
