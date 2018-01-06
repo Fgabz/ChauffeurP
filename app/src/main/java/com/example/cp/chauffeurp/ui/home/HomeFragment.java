@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.cp.chauffeurp.BuildConfig;
 import com.example.cp.chauffeurp.ChauffeurPApp;
 import com.example.cp.chauffeurp.R;
 import com.example.cp.chauffeurp.ui.base.BaseFragment;
@@ -23,6 +24,10 @@ import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerPlugin;
 import com.mapbox.services.android.telemetry.location.LocationEngine;
 import com.mapbox.services.android.telemetry.location.LocationEnginePriority;
 import com.mapbox.services.android.telemetry.location.LostLocationEngine;
+import com.mapbox.services.android.ui.geocoder.GeocoderAutoCompleteView;
+import com.mapbox.services.api.geocoding.v5.GeocodingCriteria;
+import com.mapbox.services.api.geocoding.v5.models.CarmenFeature;
+import com.mapbox.services.commons.models.Position;
 
 import butterknife.BindView;
 
@@ -34,6 +39,8 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
 
     @BindView(R.id.mapView)
     MapView mapView;
+    @BindView(R.id.autoCompleteWidget)
+    GeocoderAutoCompleteView autoComplete;
 
     private MapboxMap mapboxMap;
     private LocationLayerPlugin locationPlugin;
@@ -73,6 +80,18 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
                 enableLocationPlugin();
             }
         });
+
+        autoComplete.setAccessToken(BuildConfig.MAPBOX_KEY);
+        autoComplete.setType(GeocodingCriteria.TYPE_ADDRESS);
+        autoComplete.setCountry("FR");
+        autoComplete.setOnFeatureListener(new GeocoderAutoCompleteView.OnFeatureListener() {
+            @Override
+            public void onFeatureClick(CarmenFeature feature) {
+                Position position = feature.asPosition();
+                moveToPosition(new LatLng(position.getLatitude(), position.getLongitude()));
+                // using the position you can drop a marker or move the map's camera.
+            }
+        });
     }
 
     @SuppressLint("MissingPermission")
@@ -97,20 +116,23 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
 
         Location lastLocation = locationEngine.getLastLocation();
         if (lastLocation != null) {
-            setCameraPosition(lastLocation);
-            setMarkerPosition(lastLocation);
+            moveToPosition(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()));
         }
     }
 
-    private void setMarkerPosition(Location location) {
+    private void moveToPosition(LatLng latLng) {
+        setCameraPosition(latLng);
+        setMarkerPosition(latLng);
+    }
+
+    private void setMarkerPosition(LatLng latLng) {
         mapboxMap.addMarker(new MarkerViewOptions()
-                .position(new LatLng(location.getLatitude(), location.getLongitude()))
+                .position(latLng)
         );
     }
 
-    private void setCameraPosition(Location location) {
-        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                new LatLng(location.getLatitude(), location.getLongitude()), 16));
+    private void setCameraPosition(LatLng latLngn) {
+        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLngn, 16));
     }
 
     @Override
@@ -146,7 +168,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         mapView.onDestroy();
+        super.onDestroy();
     }
 }

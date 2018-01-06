@@ -44,6 +44,9 @@ dependencies {
     //MapBox
     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:5.3.0'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:0.3.0'
+    implementation('com.mapbox.mapboxsdk:mapbox-android-ui:2.2.9') {
+        exclude group: 'com.android.support'
+    }
     implementation 'com.mapzen.android:lost:3.0.2'
 
     //--RX Java & Android
