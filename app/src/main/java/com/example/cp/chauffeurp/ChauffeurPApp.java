@@ -20,10 +20,9 @@ public class ChauffeurPApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        Mapbox.getInstance(getApplicationContext(), BuildConfig.MAPBOX_KEY);
-
         //Initialization Dagger
+        Mapbox.getInstance(this, BuildConfig.MAPBOX_KEY);
+
         initDagger();
     }
 
