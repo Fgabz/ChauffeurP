@@ -3,6 +3,8 @@ package com.example.cp.chauffeurp;
 import android.app.Application;
 import android.content.Context;
 
+import com.mapbox.mapboxsdk.Mapbox;
+
 /**
  * Created by fanilogabaud on 06/01/2018.
  */
@@ -19,6 +21,7 @@ public class ChauffeurPApp extends Application {
     public void onCreate() {
         super.onCreate();
 
+        Mapbox.getInstance(getApplicationContext(), BuildConfig.MAPBOX_KEY);
 
         //Initialization Dagger
         initDagger();

@@ -1,5 +1,8 @@
 apply plugin: 'com.android.application'
 
+
+def STRING = "String"
+
 android {
     compileSdkVersion 26
     defaultConfig {
@@ -11,6 +14,14 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+            applicationIdSuffix '.dev'
+            versionNameSuffix '-dev'
+
+            buildConfigField STRING, "MAPBOX_KEY", "\"pk.eyJ1IjoiZmdhYnoiLCJhIjoiY2pjM2M0NGk3MGx3bTJxbXlvOXU0eXlpZyJ9.COKBudKfjnIfVMlggUunfQ\""
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
