@@ -13,6 +13,7 @@ import com.example.cp.chauffeurp.ChauffeurPApp;
 import com.example.cp.chauffeurp.R;
 import com.example.cp.chauffeurp.ui.base.BaseFragment;
 import com.example.cp.chauffeurp.util.PermissionUtil;
+import com.mapbox.mapboxsdk.annotations.MarkerView;
 import com.mapbox.mapboxsdk.annotations.MarkerViewOptions;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -45,6 +46,9 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
     private MapboxMap mapboxMap;
     private LocationLayerPlugin locationPlugin;
     private LocationEngine locationEngine;
+
+    private MarkerView userMarker;
+    private MarkerView searchMarker;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -84,12 +88,16 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
         autoComplete.setAccessToken(BuildConfig.MAPBOX_KEY);
         autoComplete.setType(GeocodingCriteria.TYPE_ADDRESS);
         autoComplete.setCountry("FR");
+
         autoComplete.setOnFeatureListener(new GeocoderAutoCompleteView.OnFeatureListener() {
             @Override
             public void onFeatureClick(CarmenFeature feature) {
+                if (searchMarker != null) {
+                    mapboxMap.removeMarker(searchMarker);
+                }
+
                 Position position = feature.asPosition();
                 moveToPosition(new LatLng(position.getLatitude(), position.getLongitude()));
-                // using the position you can drop a marker or move the map's camera.
             }
         });
     }
@@ -126,9 +134,11 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
     }
 
     private void setMarkerPosition(LatLng latLng) {
-        mapboxMap.addMarker(new MarkerViewOptions()
-                .position(latLng)
-        );
+        if (userMarker == null) {
+            userMarker = mapboxMap.addMarker(new MarkerViewOptions().position(latLng));
+        } else {
+            searchMarker = mapboxMap.addMarker(new MarkerViewOptions().position(latLng));
+        }
     }
 
     private void setCameraPosition(LatLng latLngn) {
@@ -156,8 +166,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState)
-        ;
+        mapView.onSaveInstanceState(outState);
     }
 
     @Override
@@ -168,7 +177,9 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
 
     @Override
     public void onDestroy() {
-        mapView.onDestroy();
+        if (mapView != null) {
+            mapView.onDestroy();
+        }
         super.onDestroy();
     }
 }
