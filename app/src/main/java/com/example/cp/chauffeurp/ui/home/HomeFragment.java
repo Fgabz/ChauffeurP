@@ -15,6 +15,7 @@ import com.example.cp.chauffeurp.ui.base.BaseFragment;
 import com.example.cp.chauffeurp.util.PermissionUtil;
 import com.mapbox.mapboxsdk.annotations.MarkerView;
 import com.mapbox.mapboxsdk.annotations.MarkerViewOptions;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -36,7 +37,7 @@ import butterknife.BindView;
  * Created by fanilogabaud on 06/01/2018.
  */
 
-public class HomeFragment extends BaseFragment<HomePresenter> implements HomeView {
+public class HomeFragment extends BaseFragment<HomePresenter> implements HomeView, MapboxMap.OnCameraIdleListener {
 
     @BindView(R.id.mapView)
     MapView mapView;
@@ -77,6 +78,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mapView.onCreate(savedInstanceState);
+
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
@@ -126,6 +128,18 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
         if (lastLocation != null) {
             moveToPosition(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()));
         }
+
+        mapboxMap.setOnCameraIdleListener(this);
+    }
+
+    private void updateDestinationMakerPosition() {
+        CameraPosition cameraPosition = mapboxMap.getCameraPosition();
+        if (searchMarker != null) {
+            mapboxMap.removeMarker(searchMarker);
+            searchMarker = null;
+        }
+
+        setMarkerPosition(cameraPosition.target);
     }
 
     private void moveToPosition(LatLng latLng) {
@@ -181,5 +195,10 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
             mapView.onDestroy();
         }
         super.onDestroy();
+    }
+
+    @Override
+    public void onCameraIdle() {
+        updateDestinationMakerPosition();
     }
 }

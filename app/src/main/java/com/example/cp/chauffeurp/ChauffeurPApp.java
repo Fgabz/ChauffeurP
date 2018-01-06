@@ -3,6 +3,7 @@ package com.example.cp.chauffeurp;
 import android.app.Application;
 import android.content.Context;
 
+import com.example.cp.chauffeurp.data.ApiModule;
 import com.mapbox.mapboxsdk.Mapbox;
 
 /**
@@ -35,6 +36,7 @@ public class ChauffeurPApp extends Application {
     private ChauffeurPComponent prepareApplicationComponent() {
         return DaggerChauffeurPComponent.builder()
                 .chauffeurPModule(new ChauffeurPModule(this))
+                .apiModule(new ApiModule())
                 .build();
     }
 
