@@ -101,6 +101,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
 
             Position position = feature.asPosition();
             moveToPosition(new LatLng(position.getLatitude(), position.getLongitude()));
+            presenter.cacheSearch(feature.getPlaceName());
         });
     }
 

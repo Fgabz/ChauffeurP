@@ -3,12 +3,13 @@ package com.example.cp.chauffeurp.ui.home;
 import android.content.Context;
 
 import com.example.cp.chauffeurp.data.ApiServiceManager;
+import com.example.cp.chauffeurp.data.model.Address;
 import com.example.cp.chauffeurp.data.model.ReversePosition;
 import com.example.cp.chauffeurp.ui.base.mvp.BasePresenter;
-import com.example.cp.chauffeurp.ui.base.mvp.BaseView;
 
 import javax.inject.Inject;
 
+import io.realm.Realm;
 import rx.functions.Action1;
 import timber.log.Timber;
 
@@ -20,6 +21,8 @@ public class HomePresenter extends BasePresenter<HomeView> {
 
     @Inject
     ApiServiceManager apiServiceManager;
+    @Inject
+    Realm realm;
 
     @Inject
     public HomePresenter(Context context) {
@@ -47,5 +50,11 @@ public class HomePresenter extends BasePresenter<HomeView> {
                         Timber.e(throwable, "error while checking for place name");
                     }
                 });
+    }
+
+    void cacheSearch(String placeName) {
+        Address address = new Address();
+        address.setSearchField(placeName);
+        realm.copyToRealmOrUpdate(address);
     }
 }
