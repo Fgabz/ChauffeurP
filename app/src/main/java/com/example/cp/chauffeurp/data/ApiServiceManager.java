@@ -16,10 +16,10 @@ public class ApiServiceManager {
         this.iApiService = iApiService;
     }
 
-    public Observable<Object> getPlaceNameFromPostion(String lat, String lng) {
+    /*public Observable<Object> getPlaceNameFromPostion(String lat, String lng) {
         return iApiService.getPlaceNameFromPostion(lat, lng)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io());
 
-    }
+    }*/
 }
