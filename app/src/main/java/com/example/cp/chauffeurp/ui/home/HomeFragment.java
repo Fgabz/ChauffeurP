@@ -94,16 +94,13 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
         autoComplete.setType(GeocodingCriteria.TYPE_ADDRESS);
         autoComplete.setCountry("FR");
 
-        autoComplete.setOnFeatureListener(new GeocoderAutoCompleteView.OnFeatureListener() {
-            @Override
-            public void onFeatureClick(CarmenFeature feature) {
-                if (destMarker != null) {
-                    mapboxMap.removeMarker(destMarker);
-                }
-
-                Position position = feature.asPosition();
-                moveToPosition(new LatLng(position.getLatitude(), position.getLongitude()));
+        autoComplete.setOnFeatureListener(feature -> {
+            if (destMarker != null) {
+                mapboxMap.removeMarker(destMarker);
             }
+
+            Position position = feature.asPosition();
+            moveToPosition(new LatLng(position.getLatitude(), position.getLongitude()));
         });
     }
 
@@ -213,7 +210,9 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
 
     @Override
     public void onPlaceNameFound(String placeName) {
-
+        if (placeName != null) {
+            autoComplete.setText(placeName);
+        }
     }
 
     private static class LatLngEvaluator implements TypeEvaluator<LatLng> {
