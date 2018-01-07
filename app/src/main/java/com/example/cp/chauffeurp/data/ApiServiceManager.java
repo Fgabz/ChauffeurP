@@ -1,7 +1,9 @@
 package com.example.cp.chauffeurp.data;
 
-import java.util.Observable;
+import com.example.cp.chauffeurp.data.model.ReversePosition;
 
+
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -16,10 +18,10 @@ public class ApiServiceManager {
         this.iApiService = iApiService;
     }
 
-    /*public Observable<Object> getPlaceNameFromPostion(String lat, String lng) {
-        return iApiService.getPlaceNameFromPostion(lat, lng)
+    public Observable<ReversePosition> getPlaceNameFromPostion(String longitude, String latitude) {
+        return iApiService.getPlaceNameFromPostion(longitude, latitude)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io());
 
-    }*/
+    }
 }
