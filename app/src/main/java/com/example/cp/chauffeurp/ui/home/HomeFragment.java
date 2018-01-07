@@ -1,5 +1,8 @@
 package com.example.cp.chauffeurp.ui.home;
 
+import android.animation.ObjectAnimator;
+import android.animation.TypeEvaluator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.location.Location;
 import android.os.Bundle;
@@ -49,7 +52,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
     private LocationEngine locationEngine;
 
     private MarkerView userMarker;
-    private MarkerView searchMarker;
+    private MarkerView destMarker;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -91,16 +94,13 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
         autoComplete.setType(GeocodingCriteria.TYPE_ADDRESS);
         autoComplete.setCountry("FR");
 
-        autoComplete.setOnFeatureListener(new GeocoderAutoCompleteView.OnFeatureListener() {
-            @Override
-            public void onFeatureClick(CarmenFeature feature) {
-                if (searchMarker != null) {
-                    mapboxMap.removeMarker(searchMarker);
-                }
-
-                Position position = feature.asPosition();
-                moveToPosition(new LatLng(position.getLatitude(), position.getLongitude()));
+        autoComplete.setOnFeatureListener(feature -> {
+            if (destMarker != null) {
+                mapboxMap.removeMarker(destMarker);
             }
+
+            Position position = feature.asPosition();
+            moveToPosition(new LatLng(position.getLatitude(), position.getLongitude()));
         });
     }
 
@@ -134,12 +134,18 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
 
     private void updateDestinationMakerPosition() {
         CameraPosition cameraPosition = mapboxMap.getCameraPosition();
-        if (searchMarker != null) {
-            mapboxMap.removeMarker(searchMarker);
-            searchMarker = null;
-        }
+        LatLng pos = cameraPosition.target;
 
-        setMarkerPosition(cameraPosition.target);
+        if (destMarker != null) {
+            ValueAnimator markerAnimator = ObjectAnimator.ofObject(destMarker, "position",
+                    new LatLngEvaluator(), destMarker.getPosition(), pos);
+            markerAnimator.setDuration(2000);
+            markerAnimator.start();
+
+            presenter.retrievePlaceNameFromPosition(pos.getLongitude(), pos.getLatitude());
+        } else {
+            setMarkerPosition(pos);
+        }
     }
 
     private void moveToPosition(LatLng latLng) {
@@ -151,7 +157,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
         if (userMarker == null) {
             userMarker = mapboxMap.addMarker(new MarkerViewOptions().position(latLng));
         } else {
-            searchMarker = mapboxMap.addMarker(new MarkerViewOptions().position(latLng));
+            destMarker = mapboxMap.addMarker(new MarkerViewOptions().position(latLng));
         }
     }
 
@@ -200,5 +206,27 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
     @Override
     public void onCameraIdle() {
         updateDestinationMakerPosition();
+    }
+
+    @Override
+    public void onPlaceNameFound(String placeName) {
+        if (placeName != null) {
+            autoComplete.setText(placeName);
+        }
+    }
+
+    private static class LatLngEvaluator implements TypeEvaluator<LatLng> {
+        // Method is used to interpolate the marker animation.
+
+        private LatLng latLng = new LatLng();
+
+        @Override
+        public LatLng evaluate(float fraction, LatLng startValue, LatLng endValue) {
+            latLng.setLatitude(startValue.getLatitude()
+                    + ((endValue.getLatitude() - startValue.getLatitude()) * fraction));
+            latLng.setLongitude(startValue.getLongitude()
+                    + ((endValue.getLongitude() - startValue.getLongitude()) * fraction));
+            return latLng;
+        }
     }
 }
