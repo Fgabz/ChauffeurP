@@ -18,7 +18,7 @@ public class ApiServiceManager {
         this.iApiService = iApiService;
     }
 
-    public Observable<ReversePosition> getPlaceNameFromPostion(String longitude, String latitude) {
+    public Observable<ReversePosition> getPlaceNameFromPostion(Double longitude, Double latitude) {
         return iApiService.getPlaceNameFromPostion(longitude, latitude)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io());

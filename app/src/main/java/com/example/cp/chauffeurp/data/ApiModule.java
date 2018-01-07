@@ -31,24 +31,28 @@ public class ApiModule {
     @Singleton
     OkHttpClient provideOkHttpClient(Context context) {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level
+                .NONE);
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.readTimeout(12, TimeUnit.SECONDS);
-        httpClient.addInterceptor(chain -> {
-            Request original = chain.request();
-            HttpUrl originalHttpUrl = original.url();
+        httpClient
+                .addInterceptor(chain -> {
+                    Request original = chain.request();
+                    HttpUrl originalHttpUrl = original.url();
 
-            HttpUrl url = originalHttpUrl.newBuilder()
-                    .addQueryParameter("access_token", BuildConfig.MAPBOX_KEY)
-                    .build();
+                    HttpUrl url = originalHttpUrl.newBuilder()
+                            .addQueryParameter("access_token", BuildConfig.MAPBOX_KEY)
+                            .build();
 
-            // Request customization: add request headers
-            Request.Builder requestBuilder = original.newBuilder()
-                    .url(url);
+                    // Request customization: add request headers
+                    Request.Builder requestBuilder = original.newBuilder()
+                            .url(url);
 
-            Request request = requestBuilder.build();
-            return chain.proceed(request);
-        });
+                    Request request = requestBuilder.build();
+                    return chain.proceed(request);
+                })
+                .addInterceptor(logging);
 
         return httpClient.build();
     }
@@ -63,7 +67,7 @@ public class ApiModule {
     @Singleton
     Retrofit provideAircallRestAdapter(Gson gson, OkHttpClient client) {
         return new Retrofit.Builder()
-                .baseUrl(BuildConfig.MAPBOX_KEY)
+                .baseUrl(BuildConfig.MAPBOX_ENDPOINT)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(client)

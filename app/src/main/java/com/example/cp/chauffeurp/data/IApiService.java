@@ -12,7 +12,7 @@ import rx.Observable;
 
 public interface IApiService {
 
-    @GET("v3/users/{long},{lat}.json")
-    Observable<ReversePosition> getPlaceNameFromPostion(@Path("long") String longitude,
-                                                        @Path("lat") String latitude);
+    @GET("geocoding/v5/mapbox.places/{long},{lat}.json")
+    Observable<ReversePosition> getPlaceNameFromPostion(@Path("long") Double longitude,
+                                                        @Path("lat") Double latitude);
 }

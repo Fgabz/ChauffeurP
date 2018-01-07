@@ -137,13 +137,17 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
 
     private void updateDestinationMakerPosition() {
         CameraPosition cameraPosition = mapboxMap.getCameraPosition();
+        LatLng pos = cameraPosition.target;
+
         if (destMarker != null) {
             ValueAnimator markerAnimator = ObjectAnimator.ofObject(destMarker, "position",
-                    new LatLngEvaluator(), destMarker.getPosition(), cameraPosition.target);
+                    new LatLngEvaluator(), destMarker.getPosition(), pos);
             markerAnimator.setDuration(2000);
             markerAnimator.start();
+
+            presenter.retrievePlaceNameFromPosition(pos.getLongitude(), pos.getLatitude());
         } else {
-            setMarkerPosition(cameraPosition.target);
+            setMarkerPosition(pos);
         }
     }
 
@@ -205,6 +209,11 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
     @Override
     public void onCameraIdle() {
         updateDestinationMakerPosition();
+    }
+
+    @Override
+    public void onPlaceNameFound(String placeName) {
+
     }
 
     private static class LatLngEvaluator implements TypeEvaluator<LatLng> {

@@ -2,7 +2,6 @@ package com.example.cp.chauffeurp.data.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.mapbox.services.commons.geojson.Feature;
 
 import java.util.List;
 

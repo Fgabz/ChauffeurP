@@ -6,6 +6,8 @@ import android.content.Context;
 import com.example.cp.chauffeurp.data.ApiModule;
 import com.mapbox.mapboxsdk.Mapbox;
 
+import timber.log.Timber;
+
 /**
  * Created by fanilogabaud on 06/01/2018.
  */
@@ -23,6 +25,10 @@ public class ChauffeurPApp extends Application {
         super.onCreate();
         //Initialization Dagger
         Mapbox.getInstance(this, BuildConfig.MAPBOX_KEY);
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        }
 
         initDagger();
     }

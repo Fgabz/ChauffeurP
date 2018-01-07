@@ -7,4 +7,5 @@ import com.example.cp.chauffeurp.ui.base.mvp.BaseView;
  */
 
 public interface HomeView extends BaseView {
+    void onPlaceNameFound(String placeName);
 }
