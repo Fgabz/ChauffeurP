@@ -31,7 +31,6 @@ import com.mapbox.services.android.telemetry.location.LocationEnginePriority;
 import com.mapbox.services.android.telemetry.location.LostLocationEngine;
 import com.mapbox.services.android.ui.geocoder.GeocoderAutoCompleteView;
 import com.mapbox.services.api.geocoding.v5.GeocodingCriteria;
-import com.mapbox.services.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.services.commons.models.Position;
 
 import butterknife.BindView;
@@ -103,6 +102,10 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
             moveToPosition(new LatLng(position.getLatitude(), position.getLongitude()));
             presenter.cacheSearch(feature.getPlaceName());
         });
+    }
+
+    public void setAddress(String address) {
+        autoComplete.setText(address);
     }
 
     @SuppressLint("MissingPermission")

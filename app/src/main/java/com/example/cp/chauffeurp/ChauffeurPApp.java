@@ -6,6 +6,8 @@ import android.content.Context;
 import com.example.cp.chauffeurp.data.ApiModule;
 import com.mapbox.mapboxsdk.Mapbox;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import timber.log.Timber;
 
 /**
@@ -30,7 +32,17 @@ public class ChauffeurPApp extends Application {
             Timber.plant(new Timber.DebugTree());
         }
 
+        initRealm();
         initDagger();
+    }
+
+    private void initRealm() {
+        //Initialization of Realm
+        Realm.init(this);
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(config);
     }
 
     private void initDagger() {

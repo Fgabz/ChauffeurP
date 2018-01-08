@@ -7,6 +7,8 @@ import com.example.cp.chauffeurp.data.model.Address;
 import com.example.cp.chauffeurp.data.model.ReversePosition;
 import com.example.cp.chauffeurp.ui.base.mvp.BasePresenter;
 
+import java.util.UUID;
+
 import javax.inject.Inject;
 
 import io.realm.Realm;
@@ -54,7 +56,8 @@ public class HomePresenter extends BasePresenter<HomeView> {
 
     void cacheSearch(String placeName) {
         Address address = new Address();
+        address.setId(UUID.randomUUID().getMostSignificantBits());
         address.setSearchField(placeName);
-        realm.copyToRealmOrUpdate(address);
+        realm.executeTransactionAsync(bgRealm -> bgRealm.copyToRealmOrUpdate(address));
     }
 }

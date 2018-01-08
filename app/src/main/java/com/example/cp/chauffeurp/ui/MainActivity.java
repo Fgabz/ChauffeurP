@@ -1,20 +1,16 @@
 package com.example.cp.chauffeurp.ui;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import com.example.cp.chauffeurp.ChauffeurPApp;
 import com.example.cp.chauffeurp.R;
+import com.example.cp.chauffeurp.ui.base.drawer.BaseNavDrawerActivity;
 import com.example.cp.chauffeurp.ui.home.HomeFragment;
 import com.example.cp.chauffeurp.util.PermissionUtil;
 
-import javax.inject.Inject;
+public class MainActivity extends BaseNavDrawerActivity {
 
-public class MainActivity extends AppCompatActivity {
-
-    @Inject
-    Context context;
+    private HomeFragment homeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,8 +19,12 @@ public class MainActivity extends AppCompatActivity {
         ChauffeurPApp.getApp(this).getAppComponent().inject(this);
 
         PermissionUtil.requestAppPermission(this);
-        HomeFragment homeFragment =
-                (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+
+        if (drawerAdapter != null) {
+            drawerAdapter.setCallback(this);
+        }
+
+        homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 
         //ContactsManager.updateMyContact(this);
         if (homeFragment == null) {
@@ -32,6 +32,18 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, homeFragment)
                     .commit();
+        }
+    }
+
+    @Override
+    protected void initializeDependencyInjector() {
+        ChauffeurPApp.getApp(this).getAppComponent().inject(this);
+    }
+
+    @Override
+    public void onClickItem(String text) {
+        if (homeFragment != null) {
+            homeFragment.setAddress(text);
         }
     }
 }
