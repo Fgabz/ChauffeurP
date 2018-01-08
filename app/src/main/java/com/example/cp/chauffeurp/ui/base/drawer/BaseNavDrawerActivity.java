@@ -19,12 +19,15 @@ import android.widget.TextView;
 import com.example.cp.chauffeurp.R;
 import com.example.cp.chauffeurp.data.model.Address;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Created by fanilog on 02/03/2016.
@@ -32,22 +35,19 @@ import io.realm.RealmResults;
 public abstract class BaseNavDrawerActivity extends AppCompatActivity implements DrawerAdapter.OnClickItemDrawer {
 
 
-    // delay to launch nav drawer item, to allow close animation to play
-    private static final int NAVDRAWER_LAUNCH_DELAY = 250;
     protected ActionBarDrawerToggle drawerToggle;
     protected DrawerAdapter drawerAdapter;
-
+    @BindView(R.id.drawer_layout)
+    protected DrawerLayout drawerLayout;
     @Inject
     Realm realm;
-    @BindView(R.id.drawer_layout)
-    DrawerLayout drawerLayout;
     @Nullable
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
     @BindView(R.id.list_placeholder)
-    TextView placeholdeView;
+    TextView placeholderView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,13 +70,21 @@ public abstract class BaseNavDrawerActivity extends AppCompatActivity implements
 
     private void setRecyclerView() {
         //Should be done in a Presenter class
-        RealmResults<Address> list = realm.where(Address.class).findAll();
+        RealmResults<Address> realmResults = realm.where(Address.class)
+                .findAllSorted("timeStamp", Sort.DESCENDING);
+        List<Address> list;
+        if (realmResults.size() > 15) {
+            list = realmResults.subList(realmResults.size() - 15, realmResults.size());
+        } else {
+            list = realmResults;
+        }
+
         if (list.size() > 0) {
             drawerAdapter = new DrawerAdapter(this, list);
             recyclerView.setAdapter(drawerAdapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
         } else {
-            placeholdeView.setVisibility(View.VISIBLE);
+            placeholderView.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
         }
     }

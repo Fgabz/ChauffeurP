@@ -58,6 +58,7 @@ public class HomePresenter extends BasePresenter<HomeView> {
         Address address = new Address();
         address.setId(UUID.randomUUID().getMostSignificantBits());
         address.setSearchField(placeName);
+        address.setTimeStamp(System.currentTimeMillis());
         realm.executeTransactionAsync(bgRealm -> bgRealm.copyToRealmOrUpdate(address));
     }
 }

@@ -23,7 +23,6 @@ import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerMode;
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerPlugin;
 import com.mapbox.services.android.telemetry.location.LocationEngine;
@@ -41,13 +40,14 @@ import butterknife.BindView;
 
 public class HomeFragment extends BaseFragment<HomePresenter> implements HomeView, MapboxMap.OnCameraIdleListener {
 
+    private static final int ANIMATION_DURATION = 500;
+
     @BindView(R.id.mapView)
     MapView mapView;
     @BindView(R.id.autoCompleteWidget)
     GeocoderAutoCompleteView autoComplete;
 
     private MapboxMap mapboxMap;
-    private LocationLayerPlugin locationPlugin;
     private LocationEngine locationEngine;
 
     private MarkerView userMarker;
@@ -81,12 +81,9 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
         super.onActivityCreated(savedInstanceState);
         mapView.onCreate(savedInstanceState);
 
-        mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(MapboxMap mapboxMap) {
-                HomeFragment.this.mapboxMap = mapboxMap;
-                enableLocationPlugin();
-            }
+        mapView.getMapAsync(mapboxMap -> {
+            HomeFragment.this.mapboxMap = mapboxMap;
+            enableLocationPlugin();
         });
 
         autoComplete.setAccessToken(BuildConfig.MAPBOX_KEY);
@@ -115,7 +112,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
             // Create an instance of LOST location engine
             initializeLocationEngine();
 
-            locationPlugin = new LocationLayerPlugin(mapView, mapboxMap, locationEngine);
+            LocationLayerPlugin locationPlugin = new LocationLayerPlugin(mapView, mapboxMap, locationEngine);
             locationPlugin.setLocationLayerEnabled(LocationLayerMode.TRACKING);
         } else {
             PermissionUtil.requestFineLocationPermission(getActivity());
@@ -143,7 +140,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
         if (destMarker != null) {
             ValueAnimator markerAnimator = ObjectAnimator.ofObject(destMarker, "position",
                     new LatLngEvaluator(), destMarker.getPosition(), pos);
-            markerAnimator.setDuration(2000);
+            markerAnimator.setDuration(ANIMATION_DURATION);
             markerAnimator.start();
 
             presenter.retrievePlaceNameFromPosition(pos.getLongitude(), pos.getLatitude());

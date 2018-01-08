@@ -14,6 +14,8 @@ public class Address extends RealmObject {
 
     private String searchField;
 
+    private long timeStamp;
+
     public String getSearchField() {
         return searchField;
     }
@@ -28,5 +30,13 @@ public class Address extends RealmObject {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public long getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
     }
 }

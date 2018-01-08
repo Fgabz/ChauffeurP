@@ -26,7 +26,6 @@ public class MainActivity extends BaseNavDrawerActivity {
 
         homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 
-        //ContactsManager.updateMyContact(this);
         if (homeFragment == null) {
             homeFragment = HomeFragment.newInstance();
             getSupportFragmentManager().beginTransaction()
@@ -44,6 +43,7 @@ public class MainActivity extends BaseNavDrawerActivity {
     public void onClickItem(String text) {
         if (homeFragment != null) {
             homeFragment.setAddress(text);
+            drawerLayout.closeDrawers();
         }
     }
 }
