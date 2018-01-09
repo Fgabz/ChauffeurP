@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.example.cp.chauffeurp.BuildConfig;
 import com.example.cp.chauffeurp.ChauffeurPApp;
 import com.example.cp.chauffeurp.R;
+import com.example.cp.chauffeurp.data.model.Address;
 import com.example.cp.chauffeurp.ui.base.BaseFragment;
 import com.example.cp.chauffeurp.util.PermissionUtil;
 import com.mapbox.mapboxsdk.annotations.MarkerView;
@@ -97,12 +98,14 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
 
             Position position = feature.asPosition();
             moveToPosition(new LatLng(position.getLatitude(), position.getLongitude()));
-            presenter.cacheSearch(feature.getPlaceName());
+            presenter.cacheSearch(feature);
         });
     }
 
-    public void setAddress(String address) {
-        autoComplete.setText(address);
+    public void setAddress(Address address) {
+        autoComplete.setText(address.getSearchField());
+        autoComplete.dismissDropDown();
+        moveToPosition(new LatLng(address.getLatitude(), address.getLongitude()));
     }
 
     @SuppressLint("MissingPermission")
@@ -213,6 +216,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
     public void onPlaceNameFound(String placeName) {
         if (placeName != null) {
             autoComplete.setText(placeName);
+            autoComplete.dismissDropDown();
         }
     }
 

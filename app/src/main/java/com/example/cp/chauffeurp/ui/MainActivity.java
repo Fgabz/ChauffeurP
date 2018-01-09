@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.example.cp.chauffeurp.ChauffeurPApp;
 import com.example.cp.chauffeurp.R;
+import com.example.cp.chauffeurp.data.model.Address;
 import com.example.cp.chauffeurp.ui.base.drawer.BaseNavDrawerActivity;
 import com.example.cp.chauffeurp.ui.home.HomeFragment;
 import com.example.cp.chauffeurp.util.PermissionUtil;
@@ -40,9 +41,9 @@ public class MainActivity extends BaseNavDrawerActivity {
     }
 
     @Override
-    public void onClickItem(String text) {
+    public void onClickItem(Address address) {
         if (homeFragment != null) {
-            homeFragment.setAddress(text);
+            homeFragment.setAddress(address);
             drawerLayout.closeDrawers();
         }
     }

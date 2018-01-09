@@ -53,7 +53,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
     }
 
     public interface OnClickItemDrawer {
-        void onClickItem(String text);
+        void onClickItem(Address address);
     }
 
     public class DrawerViewHolder extends RecyclerView.ViewHolder {
@@ -64,7 +64,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
             @Override
             public void onClick(View v) {
                 if (callback != null) {
-                    callback.onClickItem(addressList.get(getAdapterPosition()).getSearchField());
+                    callback.onClickItem(addressList.get(getAdapterPosition()));
                 }
             }
         };
