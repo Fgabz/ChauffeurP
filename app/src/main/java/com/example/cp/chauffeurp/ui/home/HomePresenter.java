@@ -39,21 +39,13 @@ public class HomePresenter extends BasePresenter<HomeView> {
 
     void retrievePlaceNameFromPosition(Double longitude, Double latitude) {
         apiServiceManager.getPlaceNameFromPostion(longitude, latitude)
-                .subscribe(new Action1<ReversePosition>() {
-                    @Override
-                    public void call(ReversePosition reversePosition) {
-                        String placeName = reversePosition.getFeatures().get(0).getPlaceName();
-                        Timber.d("Place name " + placeName);
-                        if (view != null) {
-                            view.onPlaceNameFound(placeName);
-                        }
+                .subscribe(reversePosition -> {
+                    String placeName = reversePosition.getFeatures().get(0).getPlaceName();
+                    Timber.d("Place name " + placeName);
+                    if (view != null) {
+                        view.onPlaceNameFound(placeName);
                     }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        Timber.e(throwable, "error while checking for place name");
-                    }
-                });
+                }, throwable -> Timber.e(throwable, "error while checking for place name"));
     }
 
     void cacheSearch(CarmenFeature result) {

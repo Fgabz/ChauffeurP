@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="spacing_xxxlarge">50dp</dimen>
+    <dimen name="navigation_drawer_width">304dp</dimen>
+    <dimen name="spacing_smaller_medium">10dp</dimen>
+    <dimen name="spacing_very_large">60dp</dimen>
+</resources>

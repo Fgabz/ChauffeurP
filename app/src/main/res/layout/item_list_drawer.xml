@@ -4,6 +4,6 @@
     android:id="@+id/address"
     android:layout_width="match_parent"
     android:gravity="center|left"
-    android:paddingLeft="10dp"
-    android:layout_height="60dp"/>
+    android:paddingLeft="@dimen/spacing_smaller_medium"
+    android:layout_height="@dimen/spacing_very_large"/>
 

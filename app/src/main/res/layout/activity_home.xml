@@ -14,7 +14,7 @@
 
     <!-- The navigation drawer -->
     <FrameLayout
-        android:layout_width="304dp"
+        android:layout_width="@dimen/navigation_drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@android:color/white">
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:visibility="gone"
-            android:text="Nothing to show"/>
+            android:text="@string/nothing_to_show"/>
 
     </FrameLayout>
 </android.support.v4.widget.DrawerLayout>

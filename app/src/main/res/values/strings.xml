@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ChauffeurP</string>
+    <string name="nothing_to_show">Nothing to show</string>
 </resources>
