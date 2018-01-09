@@ -92,6 +92,7 @@ public abstract class BaseNavDrawerActivity extends AppCompatActivity implements
     protected void setUpToolBar() {
         if (toolbar != null) {
             setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.app_name, R.string.app_name);
             drawerLayout.addDrawerListener(drawerToggle);
         }

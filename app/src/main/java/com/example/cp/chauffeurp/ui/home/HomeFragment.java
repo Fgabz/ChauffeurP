@@ -4,8 +4,10 @@ import android.animation.ObjectAnimator;
 import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -109,7 +111,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeVie
     }
 
     @SuppressLint("MissingPermission")
-    private void enableLocationPlugin() {
+    public void enableLocationPlugin() {
         // Check if permissions are enabled and if not request
         if (PermissionUtil.hasFineLocationPermission(getActivity())) {
             // Create an instance of LOST location engine

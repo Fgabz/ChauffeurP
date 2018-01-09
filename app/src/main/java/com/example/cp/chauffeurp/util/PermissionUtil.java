@@ -15,8 +15,8 @@ import java.util.List;
 
 public class PermissionUtil {
 
-    private static final int MY_PERMISSION_REQUEST_APP = 0;
-    private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1;
+    public static final int MY_PERMISSION_REQUEST_APP = 0;
+    public static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1;
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
 
 

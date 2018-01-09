@@ -1,6 +1,9 @@
 package com.example.cp.chauffeurp.ui;
 
+import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import com.example.cp.chauffeurp.ChauffeurPApp;
 import com.example.cp.chauffeurp.R;
@@ -32,6 +35,24 @@ public class MainActivity extends BaseNavDrawerActivity {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, homeFragment)
                     .commit();
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[]
+            grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case PermissionUtil.MY_PERMISSION_REQUEST_APP: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    homeFragment.enableLocationPlugin();
+                }
+            }
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 
